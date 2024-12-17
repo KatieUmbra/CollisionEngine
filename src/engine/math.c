@@ -11,3 +11,15 @@ CE_vector2f_t CE_vector2f_normalize(CE_vector2f_t* vec) {
     CE_vector2f_t normalized = {vec->x / length, vec->y / length};
     return normalized;
 }
+
+CE_vector2f_t CE_vector2f_scalar_mul(CE_vector2f_t vec, float scalar) {
+    return (CE_vector2f_t){ vec.x * scalar, vec.y * scalar };
+}
+CE_vector2f_t CE_vector2f_scalar_add(CE_vector2f_t vec, float scalar) {
+    return (CE_vector2f_t){ vec.x + scalar, vec.y + scalar }; }
+CE_vector2f_t CE_vector2f_add(CE_vector2f_t vec1, CE_vector2f_t vec2) {
+    return (CE_vector2f_t) {vec1.x + vec2.x, vec1.y + vec2.y };
+}
+float CE_vector2f_dot(CE_vector2f_t vec1, CE_vector2f_t vec2) {
+    return vec1.x * vec2.x + vec1.y + vec2.y;
+}

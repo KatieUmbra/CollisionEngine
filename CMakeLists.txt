@@ -9,6 +9,8 @@ find_package(SDL2 REQUIRED)
 set(SOURCES
     src/main.c
     src/keybindings.c
+    src/map.c
+    src/player.c
     src/engine/math.c
     src/engine/game.c
     )

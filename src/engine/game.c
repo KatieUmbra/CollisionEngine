@@ -7,7 +7,7 @@ CE_app_t* CE_app_init(CE_settings_t settings)
 {
 	if (SDL_Init(SDL_INIT_VIDEO) < 0)
 	{
-		printf("Couldn't initialized SDL: %s\n", SDL_GetError());
+		printf("Couldn't initialize SDL: %s\n", SDL_GetError());
 		exit(1);
 	}
 	CE_app_t* app = (CE_app_t*)malloc(sizeof(CE_app_t));
@@ -54,10 +54,14 @@ void CE_app_register_keyup(CE_app_t* app, SDL_Scancode key, CE_keybinding_t acti
 }
 
 static void CE_app_keydown(CE_app_t* app, SDL_Event event) {
-    app->m_keybindings_down[event.key.keysym.scancode](event);
+    CE_keybinding_t action = app->m_keybindings_down[event.key.keysym.scancode];
+    if (action == NULL) return;
+    action(event);
 }
 static void CE_app_keyup(CE_app_t* app, SDL_Event event) {
-    app->m_keybindings_up[event.key.keysym.scancode](event);
+    CE_keybinding_t action = app->m_keybindings_up[event.key.keysym.scancode];
+    if (action == NULL) return;
+    action(event);
 }
 
 // https://dewitters.com/dewitters-gameloop/
@@ -91,7 +95,6 @@ void CE_app_run(CE_app_t* app, void (*render)(float interpolation, CE_app_t* app
             loops++;
         }
         interpolation = (CE_SKIP_TICKS + SDL_GetTicks64() - next_game_tick) / CE_SKIP_TICKS;
-        printf("\rInterpolation: %.10f", interpolation);
         SDL_SetRenderDrawColor(
                 app->m_renderer,
                 app->m_settings.m_clear_color.r,
