@@ -25,6 +25,7 @@ void update() {
 }
 
 void render(float interpolation, CE_app_t* app) {
+    player_render((player_t*)player_g.m_future, interpolation, app);
     player_render(&player_g, interpolation, app);
     map_render(&map_g, interpolation, app);
 }

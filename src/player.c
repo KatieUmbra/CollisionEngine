@@ -1,15 +1,17 @@
 #include "player.h"
 #include "engine/game.h"
+#include "engine/math/shape.h"
 #include "engine/math/vector.h"
 #include "map.h"
 #include "util.h"
 
 #include <SDL_rect.h>
 #include <SDL_render.h>
+#include <stdio.h>
 #include <stdlib.h>
 
 player_t player_g = {
-    {0.0f, 0.0f},
+    {100.0f, 100.0f},
     {0.0f, 0.0f},
     {0.0f, 0.0f},
     {255, 255, 255, 255},
@@ -44,7 +46,12 @@ void player_update(player_t* plr) {
     player_update_acc_vec(plr);
     if (plr->m_future != 0) {
         *(player_t*)plr->m_future = player_update_peek(plr);
-        if (player_collides_map((player_t*)plr->m_future, &map_g)) { return; }
+        if (player_collides_map((player_t*)plr->m_future, &map_g)) {
+            printf("\rCollides!       ");
+            return; 
+        } else {
+            printf("\rDoesn't Collide!");
+        }
     }
     CE_vector2f_t normalized = CE_vector2f_normalize(&plr->m_acceleration_vec);
     plr->m_velocity = CE_vector2f_scalar_mul(plr->m_velocity, plr->m_drag);
@@ -59,7 +66,6 @@ player_t player_update_peek(player_t* plr) {
     player_t new_player = *plr;
     new_player.m_future = 0;
     new_player.m_color.g = 0;
-    new_player.m_color.a = 120;
     player_update(&new_player);
     return new_player;
 }
@@ -78,5 +84,16 @@ CE_vector2f_t player_collision_origin(player_t* plr) {
 }
 
 CE_boolean_t player_collides_map(player_t* plr, map_t* map) {
-    return CE_FALSE;
+    CE_boolean_t collides = CE_FALSE;
+    CE_rectangle2f_t plr_rect = {plr->m_position, plr->m_box_size, plr->m_box_size};
+    for (int x = 0; x < map->m_height; x++) {
+        for (int y = 0; y < map->m_width; y++) {
+            int index = x * map->m_width + y;
+            if (map->m_tiles[index]) {
+                CE_rectangle2f_t map_rect = { {x * map->m_tile_size, y * map->m_tile_size}, map->m_tile_size, map->m_tile_size };
+                collides = collides || CE_rectangle2f_collide(plr_rect, map_rect);
+            }
+        }
+    }
+    return collides;
 }
