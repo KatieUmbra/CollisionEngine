@@ -47,10 +47,7 @@ void player_update(player_t* plr) {
     if (plr->m_future != 0) {
         *(player_t*)plr->m_future = player_update_peek(plr);
         if (player_collides_map((player_t*)plr->m_future, &map_g)) {
-            printf("\rCollides!       ");
             return; 
-        } else {
-            printf("\rDoesn't Collide!");
         }
     }
     CE_vector2f_t normalized = CE_vector2f_normalize(&plr->m_acceleration_vec);
