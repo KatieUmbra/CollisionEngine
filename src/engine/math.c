@@ -25,7 +25,16 @@ CE_vector2f_t CE_vector2f_add(CE_vector2f_t vec1, CE_vector2f_t vec2) {
 float CE_vector2f_dot(CE_vector2f_t vec1, CE_vector2f_t vec2) {
     return vec1.x * vec2.x + vec1.y + vec2.y;
 }
+
+static CE_boolean_t CE_rectangle2f_collide_vec(CE_rectangle2f_t rec, CE_vector2f_t vec) {
+    return rec.m_origin.x < vec.x && vec.x < ( rec.m_origin.x + rec.m_width ) &&
+            rec.m_origin.y < vec.y && vec.y < ( rec.m_origin.y + rec.m_height );
+}
+
 CE_boolean_t CE_rectangle2f_collide(CE_rectangle2f_t first, CE_rectangle2f_t second) {
-    // check for each corner of the player too see if its inside the rect
-    return CE_FALSE;
+    CE_boolean_t a = CE_rectangle2f_collide_vec(second, first.m_origin);
+    CE_boolean_t b = CE_rectangle2f_collide_vec(second, (CE_vector2f_t) {first.m_origin.x + first.m_width, first.m_origin.y});
+    CE_vector2f_t test = (CE_vector2f_t) { first.m_origin.x + first.m_width, first.m_origin.y + first.m_height };    CE_boolean_t c = CE_rectangle2f_collide_vec(second, test);
+    CE_boolean_t d = CE_rectangle2f_collide_vec(second, (CE_vector2f_t) {first.m_origin.x, first.m_origin.y +  first.m_height});
+    return  a || b || c || d;
 }

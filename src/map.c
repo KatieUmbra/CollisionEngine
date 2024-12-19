@@ -25,7 +25,7 @@ void map_cleanup(map_t* map) {
 void map_render(map_t* map, float interpolation, CE_app_t* app) {
     for (int x = 0; x < map->m_height; x++) {
         for (int y = 0; y < map->m_width; y++) {
-            if (map->m_tiles[x * map->m_width + y]) {
+            if (map->m_tiles[y * map->m_height + x]) {
                 SDL_Rect rect = { x * map->m_tile_size, y * map->m_tile_size, map->m_tile_size, map->m_tile_size };
                 SDL_SetRenderDrawColor(app->m_renderer, 0, 255, 0, 255);
                 SDL_RenderFillRect(app->m_renderer, &rect);

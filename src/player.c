@@ -47,7 +47,8 @@ void player_update(player_t* plr) {
     if (plr->m_future != 0) {
         *(player_t*)plr->m_future = player_update_peek(plr);
         if (player_collides_map((player_t*)plr->m_future, &map_g)) {
-            return; 
+            plr->m_velocity = (CE_vector2f_t) {0.0f, 0.0f};
+            return;
         }
     }
     CE_vector2f_t normalized = CE_vector2f_normalize(&plr->m_acceleration_vec);
@@ -85,9 +86,13 @@ CE_boolean_t player_collides_map(player_t* plr, map_t* map) {
     CE_rectangle2f_t plr_rect = {plr->m_position, plr->m_box_size, plr->m_box_size};
     for (int x = 0; x < map->m_height; x++) {
         for (int y = 0; y < map->m_width; y++) {
-            int index = x * map->m_width + y;
-            if (map->m_tiles[index]) {
-                CE_rectangle2f_t map_rect = { {x * map->m_tile_size, y * map->m_tile_size}, map->m_tile_size, map->m_tile_size };
+            int index = y * map->m_height + x;
+            if (map->m_tiles[index] == 1) {
+                CE_rectangle2f_t map_rect = {
+                    {x * map->m_tile_size, y * map->m_tile_size}, 
+                    map->m_tile_size, 
+                    map->m_tile_size 
+                };
                 collides = collides || CE_rectangle2f_collide(plr_rect, map_rect);
             }
         }

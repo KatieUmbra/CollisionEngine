@@ -25,7 +25,7 @@ static void release_move_left(SDL_Event _) { ARR_vec.x += 1; }
 static void release_move_down(SDL_Event _) { ARR_vec.y -= 1; }
 static void release_move_right(SDL_Event _){ ARR_vec.x -= 1; }
 
-static void reset_position(SDL_Event _) { player_g.m_position.x = 0.0f, player_g.m_position.y = 0.0f; }
+static void reset_position(SDL_Event _) { player_g.m_position.x = 100.0f, player_g.m_position.y = 100.0f; }
 
 void register_keybindings(CE_app_t* app) {
     CE_app_register_keydown(app, SDL_SCANCODE_R, reset_position);
